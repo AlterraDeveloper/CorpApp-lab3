@@ -1,5 +1,4 @@
 ﻿using System.Data.Entity;
-using CorpApp_lab3.Utils;
 
 namespace CorpApp_lab3.Models
 {
@@ -10,6 +9,15 @@ namespace CorpApp_lab3.Models
         public DbSet<Genre> Genres { get; set; }
         public DbSet<MusicTrackAuthor> MusicTrackAuthors { get; set; }
         public DbSet<User> Users { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Playlist>().HasMany(c => c.MusicTracks)
+                .WithMany(s => s.Playlists)
+                .Map(t => t.MapLeftKey("PlaylistId")
+                    .MapRightKey("TrackId")
+                    .ToTable("MusicTracksPlaylists"));
+        }
     }
 
 }

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Web.Mvc;
 using System.Data.Entity;
 using System.Data.Entity.Core.Mapping;
+using CorpApp_lab3.ViewModels;
 
 namespace CorpApp_lab3.Controllers
 {
@@ -25,8 +26,8 @@ namespace CorpApp_lab3.Controllers
         [HttpGet]
         public ActionResult Create()
         {
-            SelectList authors = new SelectList(_dbContext.MusicTrackAuthors,"Id","Name");
-            SelectList genres = new SelectList(_dbContext.Genres,"Id","Name");
+            SelectList authors = new SelectList(_dbContext.MusicTrackAuthors,"TrackId","Name");
+            SelectList genres = new SelectList(_dbContext.Genres,"TrackId","Name");
             ViewBag.Authors = authors;
             ViewBag.Genres = genres;
             return View();
@@ -44,7 +45,6 @@ namespace CorpApp_lab3.Controllers
         [HttpGet]
         public ActionResult Edit(int id)
         {
-
             var track = _dbContext.MusicTracks.Find(id);
 
             if (track != null)
@@ -75,6 +75,31 @@ namespace CorpApp_lab3.Controllers
                 _dbContext.Entry(track).State = EntityState.Deleted;
                 _dbContext.SaveChanges();
             }
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public ActionResult AddToPlaylist(int id)
+        {
+            var userId = _dbContext.Users.FirstOrDefault(x => x.FullName == User.Identity.Name).Id;
+            ViewBag.Playlists = new SelectList(_dbContext.Playlists.Where(p => p.UserId == userId), "PlaylistId", "Name"); 
+            return View(new MusicTrackPlaylistViewModel
+            {
+                TrackId = id
+            });
+        }
+
+        [HttpPost]
+        public ActionResult AddToPlaylist(MusicTrackPlaylistViewModel viewModel)
+        {
+            var playlist = _dbContext.Playlists.Find(viewModel.PlaylistId);
+            var track = _dbContext.MusicTracks.Find(viewModel.TrackId);
+
+            track.Playlists.Add(playlist);
+
+            _dbContext.Entry(track).State = EntityState.Modified;
+            _dbContext.SaveChanges();
 
             return RedirectToAction("Index");
         }

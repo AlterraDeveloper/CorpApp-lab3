@@ -1,0 +1,28 @@
+﻿@model IEnumerable<CorpApp_lab3.Models.MusicTrackAuthor>
+
+<h4>Справочник музыкальных исполнителей</h4>
+<p>
+    @Html.ActionLink("Добавить нового исполнителя", "Create",new {}, new { @class = "btn btn-success" })
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @Html.ActionLink("Редактировать", "Edit", new { id=item.Id }, new { @class = "btn btn-info" })
+            @*@Html.ActionLink("Details", "Details", new { id=item.TrackId }) |*@
+            @Html.ActionLink("Удалить", "Delete", new { id=item.Id }, new { @class = "btn btn-danger" })
+        </td>
+    </tr>
+}
+
+</table>

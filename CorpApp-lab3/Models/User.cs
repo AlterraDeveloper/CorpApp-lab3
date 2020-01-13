@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Web.Security;
+using System.Web.UI.WebControls;
 
 namespace CorpApp_lab3.Models
 {
@@ -8,7 +10,9 @@ namespace CorpApp_lab3.Models
         public string FullName { get; set; }
         public string Login { get; set; }       
         public string HashPassword { get; set; }
-        //public bool IsAdmin { get; set; }
+
+        public int RoleId { get; set; }
+        public virtual Role Role { get; set; }
 
         public ICollection<Playlist> Playlists { get; set; }
 
@@ -16,5 +20,11 @@ namespace CorpApp_lab3.Models
         {
             Playlists = new List<Playlist>();
         }
+    }
+
+    public class Role
+    {
+        public int RoleId { get; set; }
+        public string Name { get; set; }
     }
 }

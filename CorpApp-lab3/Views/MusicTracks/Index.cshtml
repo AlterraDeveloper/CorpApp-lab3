@@ -1,45 +1,62 @@
-﻿@model IEnumerable<CorpApp_lab3.Models.MusicTrack>
+﻿@using CorpApp_lab3.Models
+@model IEnumerable<CorpApp_lab3.Models.MusicTrack>
 
 @{
     ViewBag.Title = "Все аудиозаписи";
+    var isAdmin = new SimpleRoleProvider().IsUserInRole(User.Identity.Name, "admin");
+
 }
 
 <h2>@ViewBag.Title</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Добавить новую композицию", "Create", new { }, new { @class = "btn btn-success" })
 </p>
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Name)
+            @Html.DisplayNameFor(model => model.Author)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Author)
+            @Html.DisplayNameFor(model => model.Name)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Genre)
         </th>
         <th></th>
+        @if (isAdmin)
+        {
+            <th></th>
+        }
+
     </tr>
 
-@foreach (var item in Model) {
+    @foreach (var item in Model)
+    {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.Name)
+            @Html.DisplayFor(modelItem => item.Author.Name)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Author.Name)
+            @Html.DisplayFor(modelItem => item.Name)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Genre.Name)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @*@Html.ActionLink("Details", "Details", new { id=item.Id }) |*@
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+
+            @Html.ActionLink("Добавить в плейлист", "AddToPlaylist", new { id = item.TrackId }, new { @class = "btn btn-success" })
+
         </td>
+        @if (isAdmin)
+        {
+            <td>
+                @Html.ActionLink("Редактировать", "Edit", new { id = item.TrackId }, new { @class = "btn btn-info" })
+                @Html.ActionLink("Удалить", "Delete", new { id = item.TrackId }, new { @class = "btn btn-danger" })
+            </td>
+        }
+           
     </tr>
-}
+    }
 
 </table>

@@ -22,8 +22,8 @@ namespace CorpApp_lab3.Controllers
         {
             if (ModelState.IsValid)
             {
-                //var user = __dbContextContext.Users.FirstOrDefault(u => u.Login == loginViewModel.Login && u.HashPassword == pswdHash);
-                var user = _dbContext.Users.FirstOrDefault(u => u.Login == loginViewModel.Login);
+                var pswdHash = AuthUtil.GetPasswordHash(loginViewModel.Password);
+                var user = _dbContext.Users.FirstOrDefault(u => u.Login == loginViewModel.Login && u.HashPassword == pswdHash);
 
                 if (user != null)
                 {
@@ -64,7 +64,6 @@ namespace CorpApp_lab3.Controllers
 
                     user = _dbContext.Users.FirstOrDefault(u => u.FullName == model.Name && u.HashPassword == pswdHash);
                 }
-                // если пользователь удачно добавлен в бд
                 if (user != null)
                 {
                     FormsAuthentication.SetAuthCookie(model.Name, true);
